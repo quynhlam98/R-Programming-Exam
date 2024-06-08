@@ -1,0 +1,705 @@
+---
+title: "Final_Exam"
+author: "Lam Quynh"
+date: "2024-04-04"
+output: html_document
+---
+
+**Exercise 1: Vector recycling** Imagine that you are a earning a medical degree. As part of your end of year practice, you're asked to help in diabetes study for employees of a small company.
+
+One of the risk factors for the disease is the so called BMI index. For that you need the height and weight for everyone working in the firm.
+
+So far you have collected information about the following. entities: Company CEO, Marketing Directors, Sales Clerk, Front Desk Manager, Systems Administrator, CTO, and IT support.
+
+Create the following two vectors:
+
+-   A vector called weight, storing the values: 71, 67, 83, 67
+-   A vector called height, storing the values: 1.75, 1.81, 1.78, 1.82, 1.97, 2.12, 1.75
+
+You need to calculate the BMI for all you have data for. BMI is calculated by dividing the weight in kg by the height in meters squared.
+
+Carry out the operation and save the result in a variable called bmi. What is your output?
+
+Try printing your bmi variable. Can you explain how you got the last three values, given that your weight variable only had 4 elements?
+
+```{r}
+weight <- c(71, 67, 83, 67)
+height <- c(1.75, 1.81, 1.78, 1.82, 1.97, 2.12, 1.75)
+BMI <- weight/(height*height)
+print(BMI)
+```
+
+-   When calculating between 2 vectors that have different lengths, R automatically recycles the shorter vector to match the last values of the longer vector during arithmetic operations.
+-   So in this case, the length of weight vector is 4, meanwhile, the length of height vector is 7. In the process of calculating the BMI index, R automatically recycles the first 3 values of weight vector to correspond with the later values of height vector. As follow: weight: 71 67 83 67 71 67 83 height: 1.75 1.81 1.78 1.82 1.97 2.12 1.75
+
+**Exercise 2: Vector attributes - names**
+
+employee_names \<- c("Belinda Johnes","Maria Delar", "Math Smith", "Matt Williams", "Robert Mathews", "Julia Walters", "Andrea Cheng", "July Horitz", "Danielle Muller", "Esteban Lugo") typeof(employee_names)
+
+salary \<- c(3000, NA, NA, NA, NA, 4000, 3000, 5000, 1000, 5000) typeof(salary)
+
+employees \<- c(employee_names, salary) typeof(employees)
+
+# seems like R has converted all of the double values to characters
+
+# this happens often in R and is done in strict adherence to rules
+
+# called COERCION rules
+
+# this will be the topic of the next lesson
+
+Requirements: the following vectors: the original employee_names object, and salary from the second exercise.
+
+-   Assign a name to each element from the salary vector that corresponds to a character from the employee_names vector.
+
+-   Check the attributes of the salary element.
+
+-   Is there another command you can use to check if the salary object has names assigned to it? Remove the names.
+
+-   Can you think of another way to assign names to the salary object?
+
+```{r}
+employee_names <- c("Belinda Johnes","Maria Delar", "Math Smith", "Matt Williams", "Robert Mathews",
+  "Julia Walters", "Andrea Cheng", "July Horitz", "Danielle Muller", "Esteban Lugo")
+salary <- c(3000, NA, NA, NA, NA, 4000, 3000, 5000, 1000, 5000)
+# assign names from employee_names correspond to salary
+names(salary) <- employee_names
+# check attributes of the salary element
+attributes(salary)
+# use print() command to check salary with names
+print(salary)
+# remove the names
+names(salary) <- NULL
+# another method to assign names to the salary object
+salary_info <- setNames(salary,employee_names)
+print(salary_info)
+```
+
+**Exercise 3: Indexing and slicing a vector**
+
+Requirements: the following vectors: the named salary object from the previous exercise. Extract the following values from the salary object: \* Тhe 6-th value (can you do it in more than one way) \* All the values but the 2nd one \* Values 1, 3, 5, 7, and 9 \* All the values but the 4th, 5th, and 6th \* All the values larger than 2000
+
+```{r}
+# Тhe 6-th value
+salary_info[6]
+# All the values but the 2nd one
+salary_info[-2]
+# Values 1, 3, 5, 7, and 9
+salary_info[seq(1,9,by=2)]
+# All the values but the 4th, 5th, and 6th
+salary_info[-(4:6)]
+# All the values larger than 2000
+salary_info[salary > 2000 & !is.na(salary)]
+```
+
+**Exercise 4: Vector attributes - dimensions** Create a vector s that stores the number sequence 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30. Use the seq() command to do that. *Check the attributes of s.* Does it have any dimensions? \*Give it dimensions. Try specifying 3 rows and 5 columns. What happens if we try to go beyond the traditional height and width properties and specify a value for depth, too. Let's create a hypercube that has 1 row, 3 columns and 5 "slices". Try assigning the following dimensions to s: 1, 3, 5. Can you do more than that? Do you think this could be useful for something?
+
+```{r}
+s <- c(seq(from = 2, to = 30, by = 2))
+# Check the attributes of s
+attributes(s)
+# Give it dimensions. Try specifying 3 rows and 5 columns.
+dim(s) <- c(3,5)
+print(s)
+# Create a hypercube that has 1 row, 3 columns and 5 "slices"
+dim(s) <- c(1,3,5)
+print(s)
+```
+
+-   In R programming, attributes() function is used to access and set attributions of an object. The result will return attributions including 'names','class','dim','length',etc..
+-   In the first check, the result of attributes(s) returns 'NULL' because vector s isn't assigned any attribution such as 'names' or 'dimensions. It's just a one-dimensional array.
+-   When we try to go beyond the traditional height and width propertis and specify a value for depth, the result will return an array 3D with 5 slices (5 dimensions), each slice has 1 row and 3 columns.
+-   Data that is organized in multiple dimensions, such as image data, sensor readings in various dimensions, or any other type of data, can be stored and manipulated by assigning multiple dimensions to an array (forming a hypercube). In domains such as image processing, signal processing, and computational biology in particular, it makes more sophisticated data structures and analysis techniques possible.
+
+**Exercise 5: Creating a matrix in R**
+
+Use the dim() function, the matrix() function, and cbind(). Can you think of a faster way to create this matrix? Assign names to it in two different ways. Would using rbind() be practical in this case? Can you think of a way to make adding a row to the matrix worthwhile?
+
+```{r}
+Player <- c(rep('dark', 5), rep('light', 5))
+Piece <- c('king','queen','pawn','pawn','knight','bishop','king','rook','pawn','pawn')
+# method 1
+mat1 <- cbind(Player,Piece)
+mat1
+# method 2
+mat2 <- matrix(nrow = length(Player), ncol = 2)
+colnames(mat2) <- c('Player','Piece')
+mat2[,1] <- Player
+mat2[,2] <- Piece
+mat2
+# method 3
+Player <- c(rep('dark', 5), rep('light', 5))
+Piece <- c('king','queen','pawn','pawn','knight','bishop','king','rook','pawn','pawn')
+mat3 <- c(Player, Piece)
+dim(mat3) <- c(10,2)
+mat3
+
+#Assign names to it in two different ways.
+# method 1:
+dimnames(mat3) <- list(c("row1", "row2", "row3", "row4", "row5", "row6", "row7", "row8", "row9", "row10"),
+                       c("Player", "Piece"))
+mat3
+#method 2:
+rownames(mat3) <- c(paste0('row',1:10))
+colnames(mat3) <- c("Player", "Piece")
+mat3
+```
+
+-   Definitely,method 1 which uses the cbind() function is the fastest way to create this matrix
+-   The rbind() function is used to combine objects by row, so in this case, using rbind() wouldn't be practical.
+
+**Exercise 6: Indexing and slicing a matrix**
+
+Requirements: the chess object from the Exercise 5 Transpose the chess matrix, and add a row storing the following values: 3, 5, 2, 2, 7, 4, 6, 5, 2, 1 Name the row "Turn" and transpose the matrix back to its original orientation. Extract the following values from the chess matrix: \* The first piece of the light player \* The Player and Piece columns \* All the information about the dark player \* The Pieces column; try to extract that as a matrix (Hint: lookup the drop = argument) \* Everything but the Piece column \* The 1st and 3rd values on the second row \* Replace the 3rd value on the 7th row with 3 (Hint: works just like creating an object)
+
+```{r}
+mat3_t <- t(mat3)
+Turn <- c( 3, 5, 2, 2, 7, 4, 6, 5, 2, 1)
+mat3_t <- rbind(mat3_t,Turn)
+mat <- t(mat3_t)
+mat
+# Extract the first piece of the light player
+condition <- mat[,'Player'] == 'light'
+light_piece <- mat[condition,'Piece']
+light_piece_first <- light_piece[1]
+light_piece_first
+# Extract the Player and Piece column
+player_piece <- mat[,1:2]
+player_piece
+# Extract all the information about the dark player
+condition1  <- mat[,'Player'] == 'dark'
+dark_player <- mat[condition1,]
+dark_player
+# The Pieces column, try to extract that as a matrix
+piece_mat <- mat[,'Piece', drop = FALSE]
+piece_mat
+# Extract everything but Piece column
+without_piece_mat <- mat[, !colnames(mat) %in% "Piece", drop = FALSE]
+without_piece_mat
+# Extract the 1st and 3rd values on the second row
+value_1_3 <- mat[2,c(1,3)]
+value_1_3
+# Replace the 3rd value on the 7th row with 3
+new_value <- replace(mat,c(7,3),3)
+new_value
+```
+
+**Exercise 7: Matrix arithmetic**
+
+```{r}
+# Create a 3x4 random matrix
+random_mat <- matrix(runif(12),nrow = 3, ncol = 4, byrow = TRUE)
+print(random_mat)
+
+# Name the columns and rows of the matrix
+colnames(random_mat) <- c('uno', 'dos', 'tres', 'cuatro')
+rownames(random_mat) <- c('x', 'y', 'z')
+
+# Scale the matrix by 10
+scale_random_mat <- random_mat*10
+print(scale_random_mat)
+
+# Extract a 2x4 matrix from it
+extract_scale_random_mat <- scale_random_mat[1:2,]
+print(extract_scale_random_mat)
+
+# Subtract the smaller matrix from the larger one
+# sub_mat <- scale_random_mat - extract_scale_random_mat
+# print(sub_mat)
+
+# Extract a 3x3 matrix from the original matrix 
+extract_random_mat <- random_mat[,1:3]
+print(extract_random_mat)
+
+# Try subtract again
+# sub_mat_2 <- random_mat - extract_random_mat
+# print(sub_mat_2)
+
+#Extract the column called “uno” as a vector from the original matrix
+uno_column <- random_mat[,'uno']
+uno_column
+sub_mat_3 <- random_mat - uno_column
+
+# Create a new 3x4 matrix with 12 random values
+random_mat_2 <- matrix(rnorm(12,mean=0,sd=1), nrow = 3, ncol = 4)
+print(random_mat_2)
+
+# Perform matrix multiplication
+result1 <- random_mat_2 * random_mat
+result1
+
+# Perform inner matrix multiplication
+result2 <- random_mat_2 %*% t(random_mat)
+result2
+```
+
+-   At the first 2 subtraction operations, the results will be a return error. Because we are trying to perform the subtraction of 2 matrices that have different dimensions.
+-   The last time, when we perform the subtraction between a matrix and a vector that has different sizes, R will automatically widen the size of matrix or vector that is smaller than the other to fit the size. So this calculation can be performed and return a result.
+-   The \* operation performs element-wise (normal) multiplication. It means each element of 2 vectors or 2 matrices will be correspondingly multiplied. The condition of using this operation is that 2 vectors or 2 matrices have to be the same size.
+-   The %\*% operation performs inner multiplication. It means calculating sum of multiple of each element of the first row in the first matrix and columns in the second matrix. The condition of using this operation is that the number of columns in the first matrix must be equal to the number of rows in the second matrix.
+
+**Exercise 8: Matrix operations** Create a 5x5 matrix with the rnorm() function, and a 5x5 matrix with runif(). Create each in a single line of code (Hint: nest the operations)
+
+For the two matrices, get the following information; for the first four, save the new values as columns and rows in their corresponding matrixes:\
+\* Column averages\
+\* Row averages\
+\* Column sums\
+\* Row sums\
+\* Minimum and maximum value in the matrix\
+\* Minimum and maximum value for the 3rd column in each matrix\
+\* The means and standard deviations for each matrix (compare the two values; if interested in the mathematics side of things, recreate the matrices a couple of times, and compare the results; can you explain what is happening?)
+
+```{r}
+first_mat <- matrix(runif(25), nrow = 5)
+second_mat <- matrix(rnorm(25), nrow = 5)
+# Column average
+first_avg_col <- colMeans(first_mat)
+second_avg_col <- colMeans(second_mat)
+
+#Row average
+first_avg_row <- rowMeans(first_mat)
+second_avg_row <- rowMeans(second_mat)
+
+# Column sum
+first_sum_col <- colSums(first_mat)
+second_sum_col <- colSums(second_mat)
+
+# Row sum
+first_sum_row <- rowSums(first_mat)
+second_sum_row <- rowSums(second_mat)
+
+# Save as a matrix
+first_mat_new <- rbind(first_mat,first_avg_col,first_sum_col)
+first_mat_new <- cbind(first_mat_new,first_avg_row,first_sum_row)
+second_mat_new <- rbind(second_mat,second_avg_col,second_sum_col)
+second_mat_new <- cbind(second_mat_new,second_avg_row,second_sum_row)
+
+# Minimum and maximum value in the matrix
+max_first_mat <- max(first_mat)
+max_second_mat <- max(second_mat)
+min_first_mat <- min(first_mat)
+min_second_mat <- min(second_mat)
+
+# Minimum and maximum value for the 3rd column in each matrix 
+max_col3_first_mat  <- max(first_mat[,3])
+max_col3_second_mat  <- max(second_mat[,3])
+min_col3_first_mat  <- min(first_mat[,3])
+min_col3_second_mat  <- min(second_mat[,3])
+
+# The means and standard deviations for each matrix
+mean_first_mat <- mean(first_mat)
+mean_second_mat <- mean(second_mat)
+sd_first_mat <- sd(first_mat)
+sd_second_mat <- sd(second_mat)
+
+# Print the results
+cat("Fisrt Matrix (by runif() function):\n")
+cat("Column Averages:", first_avg_col, "\n")
+cat("Row Averages:", first_avg_row, "\n")
+cat("Column Sums:", first_sum_col, "\n")
+cat("Row Sums:", first_sum_row, "\n")
+cat("Minimum Value:", min_first_mat, "\n")
+cat("Maximum Value:", max_first_mat, "\n")
+cat("Minimum Value in 3rd Column:", min_col3_first_mat, "\n")
+cat("Maximum Value in 3rd Column:", max_col3_first_mat, "\n")
+cat("Mean:", mean_first_mat, "\n")
+cat("Standard Deviation:", sd_first_mat, "\n\n")
+
+cat("Second Matrix (by rnorm() function):\n")
+cat("Column Averages:", second_avg_col, "\n")
+cat("Row Averages:", second_avg_row, "\n")
+cat("Column Sums:", second_sum_col, "\n")
+cat("Row Sums:", second_sum_row, "\n")
+cat("Minimum Value:", min_second_mat, "\n")
+cat("Maximum Value:", max_second_mat, "\n")
+cat("Minimum Value in 3rd Column:", min_col3_second_mat, "\n")
+cat("Maximum Value in 3rd Column:", max_col3_second_mat, "\n")
+cat("Mean:", mean_second_mat, "\n")
+cat("Standard Deviation:", sd_second_mat, "\n\n")
+```
+
+-   Recreating the matrices will allow you to see how the statistic change, which can provide details about the properties of the underlying random distributions (uniform distribution for runif() and normal distribution for rnorm())
+
+**Exercise 9: Creating a factor in R** Requirements: the chess matrix Exercise 5 Save the Piece column of the matrix as a vector. Create a factor from the vector. Organize the levels in the following way but do not order them: King, Queen, Rook, Bishop, Knight, Pawn. Rename the levels with just their initial letters. Order the levels in the way specified above.
+
+```{r}
+Piece <- mat1[,'Piece']
+Level_Piece <- c('King', 'Queen', 'Rook', 'Bishop', 'Knight', 'Pawn')
+factor_Piece <- factor(Piece,Level_Piece)
+levels(factor_Piece) <- substr(levels(factor_Piece),1,1)
+factor_Piece
+```
+
+**Exercise 10: Lists in R** 1. Create a list which prints like this: 2. Extract the numbers as a vector. 3. Extract the phrase Happy Birthday as a vector. 4. Extract the second item of the second list as a list. 5. Extract the second list as a list. 6. Extract the numbers item as a list. 7. Add 2 to each element in the numbers item. 8. Name the items in the list as "Numbers" and "Phrases". 8. You can use the \$ to extract named items of a list, like this: list\$item. If you extract the numbers item from newList with the \$, what other extraction method is this equivalent to? 9. Use the dollar sign to repeat the addition from above (add 2 to each element in the numbers list). 10. Add a new item called "Brands" to the list. It should contain the brands Kellogs, Nike, iPhone. Use either brackets or the dollar sign to do that. 11. Remove the iPhone from the Brands item. 12. Remove the Brands item from the list.
+
+```{r}
+# Create a list
+a_list <- list(c(1,3,5,7,9,11),
+               list('Happy birthday','Archery'))
+print(a_list)
+
+# Extract the numbers as a vector
+number <- a_list[[1]]
+
+# Extract the phrase Happy Birthday as a vector
+phrase1 <- a_list[[2]][[1]]
+
+# Extract the second item of the second list as a list
+phrase2 <- a_list[[2]][1]
+
+# Extract the second list as a list
+list_2nd <- a_list[2]
+
+# Extract the numbers item as a list
+number_list <- a_list[1]
+
+# Add 2 to each element in the numbers item
+number_plus <- number + 2
+a_list[[1]] <- number_plus
+
+# Name the items in the list as "Numbers" and "Phrases"
+names(a_list) <- c('Numbers','Phrases')
+
+# use the $ to extract named items of a list
+number_2 <- a_list$Numbers
+#This extraction method is equivalent to using double square brackets '[[': number <- a_list[[1]]
+
+# Use the dollar sign to repeat the addition from above(add 2 to each element in the numbers list)
+a_list$Numbers <- a_list$Numbers + 2
+
+# Add a new item called "Brands" to the list
+a_list$Brands <- c('Kellogs','Nike','iPhone')
+
+#  Remove the iPhone from the Brands item
+a_list$Brands <- a_list$Brands[a_list$Brands != 'iPhone']
+
+# Remove the Brands item from the list
+a_list$Brands <- NULL
+```
+
+**Exercise 11: Creating a data frame in R**
+
+```{r}
+# Create a data frame
+cars <- data.frame(year = c(2,3,4,5,8,9,8), 
+                    size = c('medium','small','medium','small','small','medium','extra large'), 
+                    mpg = c(25,47,27,36,31,2,36), 
+                    geerbox = c('manual','manual','auto','auto','manual','manual','auto'))
+rownames(cars) <- c('VolkswagenTouareg','CitroenC3','AudiA3','ToyotaYaris','KiaForte','DaciaLogan','NissanPajero')
+cars$geerbox <- factor(cars$geerbox, levels = c("auto", "manual"))
+```
+
+**Exercise 12: Importing and exporting data in R**
+
+Download the employees dataset from the resources for this lesson.
+
+Then, import it into R using your preferred import method.
+
+This is a large dataset, so limit the import to 200 observations. Note that the dataset has Copyright information in the beginning (23 rows). Any character variables should be stored as characters.
+
+Rename the variables as follows: "Employee number", "First name", "Last name", "Birth date", "Gender", "Job title", "Salary", "From date", "To date".
+
+Export the data set you currently have as a CSV, without saving the row names.
+
+Import it back again to make sure everything is okay. If it is, great job! 😊
+
+```{r}
+# Import data
+library(readr)
+employees <- read.csv('employee_data.csv', skip = 23, nrows = 200)
+# Rename the variables
+names(employees) <- c("Employee number", "First name", "Last name", "Birth date", "Gender", "Job title", "Salary", "From date", "To date")
+employees
+# Export data
+write.csv(employees, "employees_final.csv", row.names = FALSE)
+# Import data again
+employee_final <- read.csv('employees_final.csv')
+```
+
+**Exercise 13: Data frame operations**
+
+```{r}
+# Create a data frame
+cars <- data.frame(Year = c(2,3,4,5,8,9,8), 
+                    Size = c('medium','small','medium','small','small','medium','extra large'), 
+                    MPG = c(25,47,27,36,31,2,36), 
+                    Geerbox = c('manual','manual','auto','auto','manual','manual','auto'))
+rownames(cars) <- c('VolkswagenTouareg','CitroenC3','AudiA3','ToyotaYaris','KiaForte','DaciaLogan','NissanPajero')
+# Add a new variable
+Inspected <- c('Yes','Yes','No','Yes','No','No','Yes')
+cars <- cbind(cars,Inspected)
+# Add a new observation
+FordFusion <- data.frame(Year=6,Size='large',MPG=27,Geerbox='auto',Inspected='Yes')
+rownames(FordFusion) <- 'FordFusion'
+cars <- rbind(cars,FordFusion)
+# Information about dataframe
+print(paste0('The number of rows that the new data frame has is ',dim(cars)[1]))
+print(paste0('The number of columns that the new data frame has is ',dim(cars)[2]))
+name_df <- names(cars)
+variable_classes <- sapply(cars, class)
+
+# Load the diamonds data set from the ggplot2 package
+library(ggplot2)
+data('diamonds')
+class_diamonds <- class(diamonds)
+class_diamonds
+# convert class to dataframe
+diamonds <- as.data.frame(diamonds)
+# check again
+class_diamonds <- class(diamonds)
+class_diamonds
+
+# Load the built-in UsJudgeRatings data set
+data("USJudgeRatings")
+class_USJudgeRatings <- class(USJudgeRatings)
+class_USJudgeRatings
+# calculate the average rating for each judge
+AVRG <- rowMeans(USJudgeRatings)
+AVRG <- as.data.frame(AVRG)
+```
+
+**Exercise 14: Data transformation with Dplyr**
+
+Requirements: the employees data
+
+Load the employees data and convert it into a tibble. Then, make the gender and title variables into a factor.
+
+Hint: the commands are analogous to the as.data.frame() function.
+
+Check if the data has any missing values.
+
+Arrange the dataset by gender, then last name, and make first_name, last_name, and gender the first three variables in the data frame. Show only the employees whose salary is higher than 70,000. Use the ends_with() function with select.
+
+Create a data frame containing only the employee numbers of those earning more than 70,000.
+
+Find out how much each position (title) earns on average by gender; create a new variable that represents the average monthly figures and arrange your result by gender and average monthly salary, from largest to smallest.
+
+```{r}
+library(tibble)
+employees <- read.csv('employee_data.csv', skip = 23)
+employees_new <- as_tibble(employees)
+employees_new$gender <- as.factor(employees_new$gender)
+employees_new$title <- as.factor(employees_new$title)
+# count the number of missing values by column
+missing_values <- colSums(is.na(employees_new))
+# Arrange the dataset by gender, then last name
+filtered_employees <- employees_new %>%
+  arrange(gender,last_name) %>%
+  select(first_name, last_name, gender, everything()) %>%
+  filter(salary > 70000)
+# Create a data frame containing only the employee numbers of those earning more than 70,000
+emp_high_salary <- employees_new %>%
+  filter(salary > 70000) %>% select(emp_no)
+emp_high_salary_df <- as.data.frame(emp_high_salary)
+# Average salary by gender and title
+avg_salary <- employees_new %>%
+  group_by(title,gender) %>%
+  summarize(avg_salary = mean(salary))
+# Create a new variable representing the average monthly figures & arrange by gender, average monthly
+avg_salary_monthly <- avg_salary %>%
+  mutate(avg_salary_monthly = avg_salary/12) %>%
+  arrange(desc(gender),desc(avg_salary_monthly))
+```
+
+*Exercise 15: Data tidying with Tidyr* The weather data we used in the last lesson was already almost tidy when we imported it. Please find a lot less tidy version in the resources for this lesson and go through the necessary steps to clean it.
+
+Note: read the documentation on the parse_number() function from the readr package, and try to use it when cleaning the data.
+
+Play around with the tb data, too; try to reproduce what we did in the lesson -- you will need to do a little bit more tidying than we did together. Hint: if you are confused about what to do with the gender-age variables, try reading the documentation on the str_replace() function from the stringr package.
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(readr)
+library(stringr)
+# weather data
+weather <- read.csv('weather_untidy.csv')
+cleaned_weather <- weather %>%
+  pivot_longer(cols = c(d1:d31), names_to = 'day', values_to = 'value') %>%
+  drop_na(value) %>%
+  mutate(day = as.integer(parse_number(day)))
+View(cleaned_weather)
+# tb data
+tb <- read.csv('tb_untidy.csv')
+cleaned_tb <- tb %>%
+  pivot_longer(cols = c(m04:fu),names_to = 'code', values_to = 'value') %>%
+  mutate(gender = str_sub(code,1,1),
+         age = str_sub(code,2,nchar(code))) %>%
+  select(country,year,gender,age,value) %>%
+  drop_na(value) %>%
+  mutate(gender = str_replace(gender,'m','Male'),
+         gender = str_replace(gender,'f','Female')) %>%
+  mutate(age = case_when(
+    nchar(age) == 2 ~ paste0(age,'+'),
+    nchar(age) == 3 ~ str_c(str_sub(age, 1, 1), "-", str_sub(age, 2, )),
+    nchar(age) == 4 ~ str_c(str_sub(age, 1, 2), "-", str_sub(age, 3, ))
+  ))
+View(cleaned_tb)
+```
+
+**Exercise 16: Building a histogram with ggplot2**
+
+```{r}
+employees <- read.csv('employee_data.csv', skip = 23)
+employees_filtered <- employees %>%
+  filter(salary > 45000) 
+# Plot the salary frequencies
+library(ggplot2)
+library(ggthemes)
+ggplot(employees_filtered,aes(x=salary)) +
+  geom_histogram(binwidth = 5000, fill = 'orange',color = 'darkorange') +
+  labs(title = 'Salary distribution in the employee data',
+       x = 'Salary',
+       y = 'Number of employees in the salary bracket') +
+  theme_economist(base_size = 13, base_family = "serif") + 
+  theme(plot.title = element_text(hjust = 0.5)) 
+
+```
+
+**Exercise 17: Building a bar chart with ggplot2**
+
+```{r}
+ggplot(employees,aes(x=title, color = gender, fill = gender)) +
+  geom_bar() +
+  labs(
+    title = 'Job positions by gender',
+    x = 'Job position',
+    y = 'Employee count'
+  ) +
+  theme_fivethirtyeight() +
+  theme(plot.title = element_text(hjust = 0.5,color = 'darkgrey')) +
+  scale_fill_manual(values = c("orange", "brown")) + 
+  scale_color_manual(values = c("orange", "brown")) +
+  theme(legend.position = 'right') 
+# reverse the aes mapping
+ggplot(employees,aes(y=title, color = gender, fill = gender)) +
+  geom_bar() +
+  labs(
+    title = 'Job positions by gender',
+    y = 'Job position',
+    x = 'Employee count'
+  ) +
+  theme_fivethirtyeight() +
+  theme(plot.title = element_text(hjust = 0.5,color = 'darkgrey')) +
+  scale_fill_manual(values = c("orange", "brown")) + 
+  scale_color_manual(values = c("orange", "brown")) +
+  theme(legend.position = 'right') 
+
+```
+
+-   Reversing the aesthetic mappings gives you a different visualization of the data. It is efficient for representation when you want to compare the values of one variable by group of other variable. For example, if you want to compare sales of different products by region, reversing can be helpful for observation data.
+
+**Exercise 18: Building a box plot with ggplot2**
+
+```{r}
+ggplot(employees_filtered,aes(x=title,y=salary)) +
+  geom_boxplot(outlier.shape = 'star') +
+  geom_point(aes(color= gender)) +
+  labs(title = "Salary distribution",
+       subtitle = "Based on position and gender",
+       x = "Position",
+       y = "Salary") +
+  theme_classic()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        plot.title = element_text(hjust = 0.5,color = 'darkgrey'),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  scale_color_brewer(palette = "Set1")
+         
+```
+
+**Exercise 19: Building a scatter plot with ggplot2**
+
+```{r}
+library(ggplot2)
+# Read file
+real_estate <- read.csv('real_estate.csv')
+# Create a scatter plot
+ggplot(real_estate,aes(x=Area..ft..,y=Price,color= Building.Type)) + 
+  geom_point(size=2) +
+  guides(size = FALSE) +
+  theme_light() +
+  theme(legend.position = c(0.02, 0.95), legend.justification = c(0, 1),
+        plot.title = element_text(hjust = 0.5)) +
+  labs(title = "Correlation between Area and Price",
+       x = "Area(ft)",
+       y = "Price",
+       color = 'Buiding Type')
+  
+```
+
+**Exercise 20: Practical example with real estate data**
+
+```{r}
+# Read file 
+practical_product <- read.csv('practical_product.csv')
+practical_customer <- read.csv('practical_customer.csv')
+# Task 1: The types of data and the levels of measurement 
+#Type
+type_data_customer <- lapply(practical_customer[c("Customer.ID", "Mortgage")], typeof)
+print('Type of Cust ID and Mortgage is: ')
+print(type_data_customer)
+type_data_product <- typeof(practical_product$Year.of.sale)
+print(paste0('Type of Year of sale is: ',type_data_product))
+#Level
+level_data_customer <- lapply(practical_customer[c("Customer.ID", "Mortgage")], levels)
+print('Levels of measurement of Cust ID and Mortgage is: ')
+print(level_data_customer)
+level_data_product <- levels(practical_product$Year.of.sale)
+print('Levels of measurement of Year of sale is: ')
+print(level_data_product)
+
+# Task 2: Create a histogram which represents the Price variable.
+# with default binwidth
+filtered_practical_product <- practical_product %>%
+  filter(Type.of.property == 'Apartment')
+ggplot(filtered_practical_product,aes(x = Price)) +
+  geom_histogram(fill = 'purple',color = 'pink') +
+  labs(title = "Distribution of Price all apartments(Default Binwidth)",
+       x = "Price",
+       y = "Frequency") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) 
+
+# with binwidth that has bins of length $100,000
+ggplot(filtered_practical_product,aes(x = Price)) +
+  geom_histogram(binwidth = 100000,fill = 'purple',color = 'pink') +
+  labs(title = "Distribution of Price on all apartments (Binwidth = $100,000)",
+       x = "Price",
+       y = "Frequency") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# Task 4: Create a scatter plot
+  ggplot(filtered_practical_product,aes(x=Area..ft..,y=Price)) + 
+  geom_point() +
+  labs(title = "Correlation between price and area on all apartments",
+       x = "Area(ft)",
+       y = "Price") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+  
+
+# Task 5: Calculate the mean, median, mode, skewness, and standard deviation of Price 
+mean_price <- mean(filtered_practical_product$Price)
+median_price <- median(filtered_practical_product$Price)
+mode_price <- Mode(filtered_practical_product$Price)
+skewness_price <- e1071::skewness(filtered_practical_product$Price)
+sd_price <- sd(filtered_practical_product$Price)
+statistics_table <- data.frame(
+  Statistic = c("Mean", "Median", "Mode", "Skewness", "Standard Deviation"),
+  Value = c(mean_price, median_price, mode_price, skewness_price, sd_price)
+)
+print(statistics_table)
+
+# Task 7: Calculate the correlation between Price and Area
+corr_area_price <- cor(filtered_practical_product$Price, filtered_practical_product$`Area..ft..`)
+print(paste0('The correlation between Price and Area is ',corr_area_price))
+```
+
+**Answer of Task 3:** - In the second histogram with binwidth that have a larger width, the chart becomes more general in the second histogram with a wider binwidth, displaying a broad picture of the data distribution rather than particular details. - The wide binwidth will result in a loss of detail in the data distribution. Smaller changes or higher density data clusters won't be visible. Moreover, he histogram may become skewed, with the bins failing to accurately depict the actual distribution of the data. - Therefore, when setting binwidth, you need to consider the trade-off between showing a general overview of the data distribution and retaining enough detail to better understand the nature of the data. - Visually, Seeing at the both histogram,The histogram's price ranges with the highest frequency are those between \$200,000 and \$300,000.
+
+**Answer of Task 4:** - The scatter plot for the relationship between the Area and the Price can be referred to as having a positive correlation. It means when the area increases, the price also increases. The data points are clustered around a linear line, and these points form a rectangle.
+
+**Answer of Task 6:** - Mean: \$282,172.3 is the average house price (Price) of all the apartments in the data. This represents the overall data set's average value. - Median: \$249,592.0 is the average home price for all apartments in the data. When the data are sorted in ascending order, this is their middle value. - The average cost of a house is \$460,001.3. The value that appears in the data the most frequently is this one. - Skewness: The house price distribution is not normal and has a positive tail that is larger than the centroid, as indicated by the skewness value of 1.100291. - Standard Deviation: \$89,157.95 is the house price's standard deviation. This represents the typical difference between house prices and the median
+
+**Answer of Task 7:** - The correlation is 0.95 showing a positive strong relationship between the area and the price. It makes sense with the observation about scatter plots.
